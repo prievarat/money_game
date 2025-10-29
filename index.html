@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> <!-- Changed to English -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Awareness Game</title>
+    <title>Financial Awareness Game</title> <!-- Translated -->
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -165,6 +165,13 @@
             text-decoration: none;
             transition: var(--transition);
         }
+        .btn:disabled {
+            background-color: var(--border);
+            border-color: var(--border);
+            color: var(--text-muted);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
 
         .btn:focus-visible {
             outline: 3px solid var(--secondary-300);
@@ -176,7 +183,7 @@
             color: var(--text-inverse);
             border-color: var(--primary-700);
         }
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             filter: brightness(110%);
         }
 
@@ -185,7 +192,7 @@
             color: var(--primary-700);
             border-color: var(--primary-300);
         }
-        .btn-secondary:hover {
+        .btn-secondary:hover:not(:disabled) {
             background-color: var(--primary-300);
         }
 
@@ -194,10 +201,10 @@
             color: var(--error);
             border-color: var(--error);
             display: flex; /* For 'x' icon */
-            justify-content: center; /* <<< FIX: Was space-between */
+            justify-content: center; /* <<< FIX */
             align-items: center;
         }
-        .btn-accent:hover {
+        .btn-accent:hover:not(:disabled) {
             background-color: rgba(217, 71, 71, 0.05);
         }
         .btn-accent::after {
@@ -553,6 +560,11 @@
             display: flex;
             flex-direction: column;
         }
+        /* Wider modal for table */
+        .modal-card.modal-lg {
+             max-width: 800px;
+        }
+
 
         .modal-header {
             display: flex;
@@ -600,25 +612,87 @@
         .log-item-actions .btn {
             padding: var(--space-2) var(--space-3);
         }
+
+        /* NEW Modal Error Style */
+        .modal-error {
+            color: var(--error);
+            font-weight: var(--fw-bold);
+            text-align: center;
+            margin-top: var(--space-3);
+            min-height: 1.5em; /* Prevent layout shift */
+        }
+        
+        /* NEW Obligatory Table Styles */
+        .obligatory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--space-4);
+        }
+        .obligatory-table th, .obligatory-table td {
+            text-align: left;
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .obligatory-table th {
+            font-family: var(--font-alt);
+            color: var(--text-2);
+        }
+        .obligatory-table .cost-amount {
+            font-weight: var(--fw-bold);
+            color: var(--primary-700);
+            white-space: nowrap;
+        }
+        .obligatory-actions {
+            display: flex;
+            gap: var(--space-2);
+            min-width: 220px; /* Prevent wrapping */
+        }
+        .obligatory-actions .btn {
+            padding: var(--space-1) var(--space-2);
+            font-size: var(--fs-sm);
+            flex: 1;
+        }
+        
+        /* Status shown after processing a row */
+        .obligatory-status {
+            font-weight: var(--fw-bold);
+            font-style: italic;
+            font-size: var(--fs-lg);
+        }
+        .status-paid { color: var(--success); }
+        .status-deferred { color: var(--warning); }
+        .status-denied { color: var(--error); }
+        
+        .modal-footer {
+            margin-top: var(--space-4);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+        }
     
     </style>
 </head>
 <body>
 
+    <!-- Translated Login Screen -->
     <div id="login-screen">
         <div class="card login-card">
             <h1>Welcome to the Game!</h1>
             
             <h2>Your Situation</h2>
             <p class="summary-text">
-                You are a family of four living in a rented flat in Budapest's 14th district. You have two children, aged 14 and 18 (one in high school, one starting university).
+                You are a family of four, living in a rented flat in Budapest's 14th district (Zugló).
                 <br><br>
-                One parent works as a bank clerk, and the other is an office worker. Your goal is to manage the family's monthly finances, make difficult choices, and keep your Money, Social, and Well-being stats above zero.
+                You have two children, aged 14 and 18 (one in high school, one in university).
+                <br><br>
+                One of you is a bank clerk, the other is an office worker. Your goal is to manage the family's monthly finances, make difficult decisions, and keep your 'Money', 'Social', and 'Well-being' stats above zero.
                 <br><br>
                 Good luck!
             </p>
 
-            <h2>Choose Your Persona</h2>
+            <h2>Choose a Persona</h2>
             <div class="persona-choices">
                 <button id="persona-male" class="btn-persona active">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4m0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4" /></svg>
@@ -631,7 +705,7 @@
             </div>
             
             <label for="nickname">Enter a family name:</label>
-            <input type="text" id="nickname" class="input" placeholder="e.g., 'The Nagy Family'">
+            <input type="text" id="nickname" class="input" placeholder="e.g., 'The Smith Family'">
 
             <div class="start-button-container">
                 <button id="start-game" class="btn btn-primary">Start Game</button>
@@ -639,6 +713,7 @@
         </div>
     </div>
 
+    <!-- Translated Game Screen -->
     <div id="game-screen" class="hidden">
         
         <header class="game-header container">
@@ -653,7 +728,6 @@
             
             <section class="stats-grid">
                 
-                <!-- HTML Updated for Money Bar -->
                 <div>
                     <div id="money-label" class="bar-label-top">0 Ft</div>
                     <div id="money-bar-container" class="bar-container-segmented">
@@ -662,11 +736,10 @@
                     <div class="stat-label">Money</div>
                 </div>
                 
-                <!-- HTML Updated for Social Gauge -->
                 <div class="gauge-container">
                     <div id="social-gauge-wrapper" class="gauge-icon-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M14.6 8.36H9.4V6.5h5.2v1.86ZM21.5 12.27v4.46c0 .73-.1 1.44-.31 2.11-.21.68-.52 1.3-.92 1.88-.4.58-.88 1.07-1.44 1.47-.56.4-1.18.7-1.85.91-.67.2-1.37.3-2.1.3s-1.43-.1-2.1-.3c-.67-.2-1.29-.5-1.85-.91-.56-.4-1.04-.89-1.44-1.47-.4-.58-.71-1.2-.92-1.88-.21-.67-.31-1.38-.31-2.11v-4.46c0-.73.1-1.44.31-2.11.21-.68.52-1.3.92-1.88.4-.58.88-1.07 1.44-1.47.56-.4 1.18-.7 1.85-.91.67-.2 1.37-.3 2.1-.3s1.43.1 2.1.3c.67.2 1.29.5 1.85.91.56.4 1.04.89 1.44 1.47.4.58.71 1.2.92 1.88.21.67.31 1.38.31 2.11Zm-1.86 4.46c0-.44-.04-.88-.13-1.31-.09-.43-.23-.84-.42-1.23-.19-.39-.42-.76-.71-1.1-.29-.34-.63-.65-.99-.93-.3-.23-.62-.43-.96-.59-.34-.16-.7-.29-1.07-.38-.37-.09-.75-.14-1.13-.14s-.76.05-1.13.14c-.37.09-.72.22-1.07.38-.34.16-.66.36-.96.59-.36.28-.7.59-1 .93-.29.34-.52.71-.71 1.1-.19.39-.33.8-.42 1.23-.09.43-.13.87-.13 1.31v4.4c0 .44.04.88.13 1.31.09.43.23.84.42 1.23.19.39.42.76.71 1.1.29.34.63.65.99.93.3.23.62.43.96.59.34.16.7.29 1.07.38.37.09.75.14 1.13.14s.76-.05 1.13-.14c.37-.09.72-.22 1.07-.38.34-.16.66.36.96.59.36.28.7.59 1 .93.29.34.52.71.71 1.1.19.39.33.8.42 1.23.09.43.13.87.13 1.31v-4.4Z"/>
+                          <path d="M14.6 8.36H9.4V6.5h5.2v1.86ZM21.5 12.27v4.46c0 .73-.1 1.44-.31 2.11-.21.68-.52 1.3-.92 1.88-.4.58-.88 1.07-1.44 1.47-.56.4-1.18.7-1.85.91-.67.2-1.37.3-2.1.3s-1.43-.1-2.1-.3c-.67-.2-1.29-.5-1.85-.91-.56-.4-1.04-.89-1.44-1.47-.4-.58-.71-1.2-.92-1.88-.21-.67-.31-1.38-.31-2.11v-4.46c0-.73.1-1.44.31-2.11.21-.68.52 1.3.92-1.88.4-.58.88-1.07 1.44-1.47.56-.4 1.18-.7-1.85-.91.67.2 1.37-.3 2.1-.3s1.43.1 2.1.3c.67.2 1.29.5 1.85.91.56.4 1.04.89 1.44 1.47.4.58.71 1.2.92 1.88.21.67.31 1.38.31 2.11Zm-1.86 4.46c0-.44-.04-.88-.13-1.31-.09-.43-.23-.84-.42-1.23-.19-.39-.42-.76-.71-1.1-.29-.34-.63-.65-.99-.93-.3-.23-.62-.43-.96-.59-.34-.16-.7-.29-1.07-.38-.37-.09-.75-.14-1.13-.14s-.76.05-1.13.14c-.37.09-.72.22-1.07.38-.34.16-.66.36-.96.59-.36.28-.7.59-1 .93-.29.34-.52.71-.71 1.1-.19.39-.33.8-.42 1.23-.09.43-.13.87-.13 1.31v4.4c0 .44.04.88.13 1.31.09.43.23.84.42 1.23.19.39.42.76.71 1.1.29.34.63.65.99.93.3.23.62.43.96.59.34.16.7.29 1.07.38.37.09.75.14 1.13.14s.76-.05 1.13-.14c.37-.09.72-.22 1.07-.38.34-.16.66.36.96.59.36.28.7.59 1 .93.29.34.52.71-.71 1.1.19.39.33.8.42 1.23.09.43.13.87.13 1.31v-4.4Z"/>
                         </svg>
                     </div>
                     <div id="social-gauge" class="gauge-circle"> 
@@ -675,7 +748,6 @@
                     <div class="stat-label">Social</div>
                 </div>
                 
-                <!-- HTML Updated for Well-being Gauge -->
                 <div class="gauge-container">
                     <div id="wellbeing-gauge-wrapper" class="gauge-icon-wrapper">
                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -688,7 +760,6 @@
                     <div class="stat-label">Well-being</div>
                 </div>
 
-                <!-- HTML Updated for Debt Bar -->
                 <div>
                     <div id="debt-label" class="bar-label-top">0 Ft</div>
                     <div id="debt-bar-container" class="bar-container-segmented">
@@ -699,11 +770,12 @@
 
             </section>
 
-            <section id="event-panel">
+            <!-- Event Panel is now just for non-obligatory events -->
+            <section id="event-panel" class="hidden"> <!-- Start hidden -->
                 <div class="card" id="event-card">
-                    <div id="event-title">Event Title Goes Here</div>
+                    <div id="event-title">Event Title</div>
                     <div id="event-message">
-                        This is the message field for events. A description of a choice or a bill will appear here for the player to act on.
+                        Event description goes here.
                     </div>
                 </div>
                 <div id="event-choices">
@@ -713,7 +785,7 @@
         </main>
     </div>
 
-    <!-- Modals (HTML unchanged) -->
+    <!-- Translated Modals -->
     <div id="log-modal" class="modal-overlay hidden">
         <div class="card modal-card">
             <div class="modal-header">
@@ -721,20 +793,53 @@
                 <button id="btn-log-close" class="btn-modal-close">&times;</button>
             </div>
             <div id="log-modal-body" class="modal-body">
-                </div>
+                <!-- JS populates this -->
+            </div>
+            <div id="log-modal-error" class="modal-error"></div> <!-- Added error field -->
         </div>
     </div>
 
     <div id="debt-modal" class="modal-overlay hidden">
         <div class="card modal-card">
             <div class="modal-header">
-                <h2>Obligatory Debt History</h2>
+                <h2>Outstanding Debts</h2>
                 <button id="btn-debt-close" class="btn-modal-close">&times;</button>
             </div>
             <div id="debt-modal-body" class="modal-body">
-                </div>
+                <!-- JS populates this -->
+            </div>
+            <div id="debt-modal-error" class="modal-error"></div> <!-- Added error field -->
         </div>
     </div>
+
+    <!-- NEW: Obligatory Costs Modal -->
+    <div id="obligatory-modal" class="modal-overlay hidden">
+        <div class="card modal-card modal-lg"> <!-- Wide modal -->
+            <div class="modal-header">
+                <h2>Monthly Obligatory Costs</h2>
+                <!-- No close button, must process all -->
+            </div>
+            <div id="obligatory-modal-body" class="modal-body">
+                <table class="obligatory-table">
+                    <thead>
+                        <tr>
+                            <th>Cost</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="obligatory-table-body">
+                        <!-- JS populates this -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="obligatory-modal-error" class="modal-error"></div>
+            <div class="modal-footer">
+                <button id="btn-obligatory-continue" class="btn btn-primary" disabled>Continue to Month's Events</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -760,6 +865,7 @@
         const wellbeingPercent = document.getElementById('wellbeing-percent');
         const wellbeingGauge = document.getElementById('wellbeing-gauge');
 
+        const eventPanel = document.getElementById('event-panel'); // Get panel itself
         const eventTitle = document.getElementById('event-title');
         const eventMessage = document.getElementById('event-message');
         const eventChoices = document.getElementById('event-choices');
@@ -773,8 +879,19 @@
         const logModalBody = document.getElementById('log-modal-body');
         const debtModalBody = document.getElementById('debt-modal-body');
 
+        // New Obligatory Modal Elements
+        const obligatoryModal = document.getElementById('obligatory-modal');
+        const obligatoryTableBody = document.getElementById('obligatory-table-body');
+        const obligatoryModalError = document.getElementById('obligatory-modal-error');
+        const btnObligatoryContinue = document.getElementById('btn-obligatory-continue');
+
+        // Error message fields
+        const logModalError = document.getElementById('log-modal-error');
+        const debtModalError = document.getElementById('debt-modal-error');
+
+
         // ==================================================================
-        // 2. GAME STATE (Unchanged)
+        // 2. GAME STATE (Translated)
         // ==================================================================
         let gameState = {
             nickname: "",
@@ -783,22 +900,27 @@
             social: 50,
             well_being: 50,
             currentYear: 1,
-            currentMonth: 0, // 0 = January, 1 = February
+            currentMonth: 0, // 0 = January
             debtHistory: [], // { event, amount, month }
             snoozedEvents: [], // { event }
             monthlyEventQueue: [],
+            // Translated monthNames
             monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
             salary: 1126600,
             maxMoney: 1500000, 
             maxDebt: 1000000,
             cheapFoodStreak: 0,
-            consecutiveDebtMonths: 0, // REPLACED the old flag
+            consecutiveDebtMonths: 0, 
             carSold: false,
             recurringCosts: [] 
         };
+        
+        // NEW State variables for obligatory modal
+        let processedObligatoryCount = 0;
+        let totalObligatoryCosts = 0;
 
         // ==================================================================
-        // 3. THE EVENT DATABASE (Unchanged)
+        // 3. THE EVENT DATABASE (TRANSLATED + ALL NEW EVENTS)
         // ==================================================================
         const allEvents = {
             // === OBLIGATORY (Stats Doubled) ===
@@ -902,7 +1024,7 @@
                     ]
                 }
             ],
-            // === SPECIAL (Costs Doubled, Stats Doubled) ===
+            // === SPECIAL (Stats Doubled) ===
             special: [
                 {
                     id: "groceries", title: "Monthly Groceries", message: "Time for the big monthly grocery run. What's the plan for the family's food?", type: "choice", dayOfMonth: 8,
@@ -912,7 +1034,7 @@
                     ]
                 }
             ],
-            // === OPTIONAL (Stats Doubled) ===
+            // === OPTIONAL (Stats Doubled + 15 NEW EVENTS) ===
             optional: [
                 { id: "opt_pizza", title: "Pizza Night", message: "Everyone's tired. Should we just order pizza for the family tonight?", type: "optional", amount: 15000, dayOfMonth: 12, effects_yes: { social: 10, well_being: 12 }, effects_no: { social: 0, well_being: 0 } },
                 { id: "opt_cinema", title: "Cinema Trip", message: "There's a new movie everyone wants to see. Go to the cinema this weekend?", type: "optional", amount: 15000, dayOfMonth: 19, effects_yes: { social: 12, well_being: 10 }, effects_no: { social: 0, well_being: 0 } },
@@ -933,9 +1055,28 @@
                 { id: "opt_microwave", title: "Microwave Died", message: "The microwave just sparked and died. Buy a new one?", type: "optional", amount: 30000, dayOfMonth: 23, effects_yes: { social: 2, well_being: 8 }, effects_no: { social: -6, well_being: -12 } },
                 { id: "opt_balaton", title: "Weekend Family Trip", message: "A long weekend is coming up. Book a cheap apartment at Lake Balaton?", type: "optional", amount: 120000, dayOfMonth: 24, effects_yes: { social: 40, well_being: 40 }, effects_no: { social: -10, well_being: -10 } },
                 { id: "opt_charity", title: "Charity Donation", message: "A local charity is collecting for the animal shelter. Want to donate?", type: "optional", amount: 5000, dayOfMonth: 25, effects_yes: { social: 10, well_being: 6 }, effects_no: { social: 0, well_being: 0 } },
-                { id: "opt_physiotherapy", title: "Physiotherapy", message: "Your back has been hurting from sitting at the office. Your doctor recommends physiotherapy.", type: "optional", amount: 30000, dayOfMonth: 16, effects_yes: { social: 0, well_being: 20 }, effects_no: { social: 0, well_being: -6 } }
+                { id: "opt_physiotherapy", title: "Physiotherapy", message: "Your back has been hurting from sitting at the office. Your doctor recommends physiotherapy.", type: "optional", amount: 30000, dayOfMonth: 16, effects_yes: { social: 0, well_being: 20 }, effects_no: { social: 0, well_being: -6 } },
+                
+                // --- 10 NEW NEGATIVE OPTIONALS ---
+                { id: "opt_gymnastics_pass", title: "Gymnastics Pass", message: "The 14-year-old needs an expensive gymnastics pass for the school team.", type: "optional", amount: 25000, dayOfMonth: 5, nag: true, effects_yes: { social: 10, well_being: 10 }, effects_no: { social: -20, well_being: -10 } },
+                { id: "opt_lost_phone", title: "Lost Phone", message: "The 18-year-old lost their phone. It needs to be replaced for university.", type: "optional", amount: 150000, dayOfMonth: 14, nag: true, effects_yes: { social: 10, well_being: 0 }, effects_no: { social: -40, well_being: -20 } },
+                { id: "opt_sick_pet", title: "Sick Pet", message: "The family dog is sick and needs urgent vet care.", type: "optional", amount: 40000, dayOfMonth: 12, effects_yes: { social: 0, well_being: 20 }, effects_no: { social: -20, well_being: -30 } },
+                { id: "opt_neighbor_leak", title: "Neighbor's Leak", message: "It looks like you caused a leak in the neighbor's apartment below! You have to pay for the repairs.", type: "optional", amount: 75000, dayOfMonth: 19, effects_yes: { social: 10, well_being: 0 }, effects_no: { social: -40, well_being: -10 } },
+                { id: "opt_wedding_invite", title: "Wedding Invitation", message: "You've been invited to a cousin's wedding in the countryside. (Travel, gift, clothes).", type: "optional", amount: 90000, dayOfMonth: 22, effects_yes: { social: 40, well_being: -10 }, effects_no: { social: -30, well_being: 0 } },
+                { id: "opt_textbook", title: "Expensive Textbook", message: "The university student needs an extremely expensive, but mandatory, textbook.", type: "optional", amount: 28000, dayOfMonth: 9, nag: true, effects_yes: { social: 0, well_being: 10 }, effects_no: { social: -10, well_being: -10 } },
+                { id: "opt_theater_tickets", title: "Theater Tickets", message: "Your partner surprised you with two expensive theater tickets. Do you have to go?", type: "optional", amount: 30000, dayOfMonth: 17, nag: true, effects_yes: { social: 30, well_being: 20 }, effects_no: { social: -20, well_being: -20 } },
+                { id: "opt_subscription_trap", title: "Subscription Trap", message: "You discovered you're subscribed to an expensive software you don't use. Cancelling is complicated.", type: "optional", amount: 18000, dayOfMonth: 13, effects_yes: { social: 0, well_being: -10 }, effects_no: { social: -10, well_being: -20 } },
+                { id: "opt_winter_tires", title: "Winter Tires", message: "The season is here, time to change the winter tires. The old ones are completely worn out.", type: "optional", amount: 120000, dayOfMonth: 20, effects_yes: { social: 0, well_being: 40 }, effects_no: { social: -20, well_being: -40 } },
+                { id: "opt_class_money", title: "Class Money", message: "The school is asking for class money and foundation contributions again.", type: "optional", amount: 10000, dayOfMonth: 6, nag: true, effects_yes: { social: 10, well_being: 0 }, effects_no: { social: -10, well_being: 0 } },
+
+                // --- 5 NEW POSITIVE OPTIONALS ---
+                { id: "opt_farmers_market", title: "Farmer's Market", message: "You can buy a large batch of fresh, healthy vegetables and fruits cheaply at the local farmer's market.", type: "optional", amount: 15000, dayOfMonth: 11, effects_yes: { social: 20, well_being: 30 }, effects_no: { social: 0, well_being: 0 } },
+                { id: "opt_board_game", title: "Board Game Night", message: "You buy a new, discounted board game and have a family game night.", type: "optional", amount: 12000, dayOfMonth: 18, effects_yes: { social: 40, well_being: 20 }, effects_no: { social: 0, well_being: 0 } },
+                { id: "opt_local_hike", title: "Local Hike", message: "The sun is shining! You go for a hike in the nearby hills (sandwiches, minimal transport cost).", type: "optional", amount: 5000, dayOfMonth: 24, effects_yes: { social: 30, well_being: 40 }, effects_no: { social: -10, well_being: -10 } },
+                { id: "opt_used_bike", title: "Used Bike", message: "You found a cheap, used bike in good condition online for the 14-year-old.", type: "optional", amount: 25000, dayOfMonth: 15, effects_yes: { social: 10, well_being: 30 }, effects_no: { social: 0, well_being: 0 } },
+                { id: "opt_volunteering", title: "Volunteering", message: "The family volunteers for a day at a local foundation. (minimal travel cost)", type: "optional", amount: 2000, dayOfMonth: 26, effects_yes: { social: 60, well_being: 20 }, effects_no: { social: 0, well_being: 0 } }
             ],
-            // === OPPORTUNITY (Stats Doubled + 5 New Events) ===
+            // === OPPORTUNITY (Stats Doubled + 8 NEW EVENTS) ===
             opportunity: [
                 { id: "job_neighbor", title: "Neighbor's Job Offer", message: "Your neighbor offered your older child 20,000 Ft to do some hard yard work all Saturday.", type: "opportunity", dayOfMonth: 13,
                     choices: [
@@ -957,37 +1098,59 @@
                 },
                 { id: "job_sell_car", title: "Sell the Car?", message: "You're desperate for cash. You could sell the family car. You'd get a one-time cash boost, but would have to rely on public transport, which is harder with kids.", type: "opportunity", dayOfMonth: 4,
                     choices: [
-                        { id: "yes", text: "Sell the car (+500,000 Ft)", effects: { money: 500000, social: -50, well_being: -40 }, action: "sell_car" },
+                        { id: "yes", text: "Sell the car (+1,500,000 Ft)", effects: { money: 1500000, social: -50, well_being: -40 }, action: "sell_car" },
                         { id: "no", text: "Keep the car", effects: { money: 0, social: 0, well_being: 0 } }
                     ]
                 },
-                // --- NEW MONEY EVENTS ---
                 { id: "new_tax_refund", title: "Tax Refund!", message: "Good news! You overpaid on your taxes last year. The tax office (NAV) has sent you a refund.", type: "opportunity", dayOfMonth: 11,
                     choices: [
-                        { id: "yes", text: "Receive Refund (+65,000 Ft)", effects: { money: 65000, social: 5, well_being: 10 } }
+                        { id: "yes", text: "Awesome! (+65,000 Ft)", effects: { money: 65000, social: 5, well_being: 10 } }
                     ]
                 },
-                { id: "new_sell_junk", title: "Sell Old Junk", message: "You spend a Saturday cleaning the storage room and find old furniture and electronics. You could sell it all online.", type: "opportunity", dayOfMonth: 22,
+                // --- 8 NEW INCOME OPPORTUNITIES ---
+                { id: "opp_market_research", title: "Market Research", message: "You've been invited to an online market research survey. It takes about 1 hour.", type: "opportunity", dayOfMonth: 10,
                     choices: [
-                        { id: "yes", text: "Sell it online (+30,000 Ft)", effects: { money: 30000, social: -2, well_being: -5 } }, // Takes effort
-                        { id: "no", text: "Don't bother", effects: { money: 0, social: 0, well_being: 0 } }
+                        { id: "yes", text: "Participate (+15,000 Ft)", effects: { money: 15000, social: 0, well_being: -4 } }, // Takes time
+                        { id: "no", text: "I don't have time", effects: { money: 0, social: 0, well_being: 0 } }
                     ]
                 },
-                { id: "new_babysitting", title: "Babysitting Gig", message: "Your neighbor needs a babysitter for a whole weekend. It's a lot of work, but they pay well.", type: "opportunity", dayOfMonth: 12,
+                { id: "opp_found_money", title: "Found Money", message: "You found a wallet with some cash in it while walking. There's no ID inside.", type: "opportunity", dayOfMonth: 18,
                     choices: [
-                        { id: "yes", text: "Take the gig (+25,000 Ft)", effects: { money: 25000, social: -10, well_being: -10 } }, // No relax time
-                        { id: "no", text: "Refuse", effects: { money: 0, social: 0, well_being: 0 } }
+                        { id: "yes", text: "Keep it (+10,000 Ft)", effects: { money: 10000, social: -4, well_being: 4 } }, // Small guilt? Small boost?
+                        { id: "no", text: "Turn it in to the police", effects: { money: 0, social: 10, well_being: 10 } } // Feel good action
                     ]
                 },
-                { id: "new_bonus", title: "Work Bonus", message: "You (the bank clerk) hit your targets this month and got a small, unexpected performance bonus.", type: "opportunity", dayOfMonth: 28,
+                { id: "opp_utility_refund", title: "Bill Refund", message: "One of the utility providers notified you of an overpayment. They are sending a small refund.", type: "opportunity", dayOfMonth: 21,
                     choices: [
-                        { id: "yes", text: "Awesome! (+50,000 Ft)", effects: { money: 50000, social: 5, well_being: 10 } }
+                        { id: "yes", text: "Great news! (+8,000 Ft)", effects: { money: 8000, social: 4, well_being: 6 } }
                     ]
                 },
-                { id: "new_translation", title: "Translation Job", message: "You (the office worker) are asked to do a quick translation project for another department. It will take one long night.", type: "opportunity", dayOfMonth: 16,
+                { id: "opp_tutoring", title: "Tutoring", message: "The neighbor asked your older child to tutor their younger one in math for a few hours a week.", type: "opportunity", dayOfMonth: 7,
                     choices: [
-                        { id: "yes", text: "Take the job (+35,000 Ft)", effects: { money: 35000, social: -8, well_being: -8 } },
-                        { id: "no", text: "Decline", effects: { money: 0, social: 0, well_being: 0 } }
+                        { id: "yes", text: "Take the job (+20,000 Ft/mo)", effects: { money: 20000, social: -8, well_being: -6 } }, // Less free time
+                        { id: "no", text: "Not enough time", effects: { money: 0, social: 0, well_being: 0 } }
+                    ]
+                },
+                 { id: "opp_relative_gift", title: "Gift from Relatives", message: "Relatives from the countryside visited and gave you some 'pocket money' as a gift.", type: "opportunity", dayOfMonth: 25,
+                    choices: [
+                        { id: "yes", text: "Thank you! (+25,000 Ft)", effects: { money: 25000, social: 10, well_being: 10 } }
+                    ]
+                },
+                { id: "opp_sell_books", title: "Sell Old Books", message: "You cleaned the shelves and found a lot of old books. You can sell them to a second-hand bookstore.", type: "opportunity", dayOfMonth: 14,
+                    choices: [
+                        { id: "yes", text: "Sell them (+7,000 Ft)", effects: { money: 7000, social: 0, well_being: 2 } },
+                        { id: "no", text: "Not worth the hassle", effects: { money: 0, social: 0, well_being: 0 } }
+                    ]
+                },
+                { id: "opp_cleaning_gig", title: "Cleaning Gig", message: "One of you (parents) can take a weekend cleaning job at a friend's office.", type: "opportunity", dayOfMonth: 20,
+                    choices: [
+                        { id: "yes", text: "Take the gig (+30,000 Ft)", effects: { money: 30000, social: -10, well_being: -16 } }, // Tiring
+                        { id: "no", text: "Too tiring", effects: { money: 0, social: 0, well_being: 0 } }
+                    ]
+                },
+                { id: "opp_bank_interest", title: "Interest Credit", message: "The bank credited a minimal amount of interest on your demand deposit.", type: "opportunity", dayOfMonth: 28,
+                    choices: [
+                        { id: "yes", text: "Better than nothing... (+1,500 Ft)", effects: { money: 1500, social: 0, well_being: 0 } }
                     ]
                 }
             ],
@@ -1069,26 +1232,38 @@
         };
 
         // ==================================================================
-        // 4. GAME ENGINE FUNCTIONS (Unchanged)
+        // 4. GAME ENGINE FUNCTIONS (MODIFIED FLOW)
         // ==================================================================
 
         function init() {
-            gameState.nickname = nicknameInput.value || "Player 1";
+            gameState.nickname = nicknameInput.value || "Player 1"; // Translated
             loginScreen.classList.add('hidden');
             gameScreen.classList.remove('hidden');
+            
+            // Create segments for bars
+            createBarSegments(moneyBarContainer, 20);
+            createBarSegments(debtBarContainer, 20);
             
             startMonth();
         }
 
+        // NEW: Function to create bar segments
+        function createBarSegments(container, count) {
+            container.innerHTML = ''; // Clear existing
+            for (let i = 0; i < count; i++) {
+                const segment = document.createElement('div');
+                segment.className = 'bar-segment';
+                container.appendChild(segment);
+            }
+        }
+
         /**
-         * Starts a new month
-         * === CONTAINS THE 6-MONTH BANKRUPTCY LOGIC ===
+         * Starts a new month (MODIFIED)
          */
         function startMonth() {
             
-            // *** BANKRUPTCY FIX (Step 1): Check for Game Over ***
             if (gameState.consecutiveDebtMonths >= 6) {
-                return gameOver("You failed to pay off your debts for 6 consecutive months and have gone bankrupt!");
+                return gameOver(`You failed to pay off your debts for 6 consecutive months and have gone bankrupt!`); // Translated
             }
 
             // 1. Add Salary
@@ -1114,7 +1289,7 @@
                     interest += itemInterest;
                 });
                 
-                // Create the new warning message
+                // Translated
                 debtWarningMessage = `Your unpaid debts increased by ${formatCurrency(interest)} (10% fee).
                 \nYou have been in debt for ${gameState.consecutiveDebtMonths} consecutive month(s). 
                 \nIf you reach 6 months, you will go bankrupt!`;
@@ -1123,50 +1298,178 @@
                 gameState.consecutiveDebtMonths = 0; // Reset counter if debt is 0
             }
 
-            // 4. Build the event queue for the month
-            buildMonthlyQueue();
-
-            // 5. Start processing events
-            if (debtWarningMessage) {
-                displayMessage("Debt Warning", debtWarningMessage, [{text: "Continue"}], () => processNextEvent());
-            } else {
-                processNextEvent();
-            }
+            // 4. Update UI *before* showing modal
             updateUI();
+
+            // 5. MODIFIED FLOW: Show debt warning, *then* obligatory modal
+            if (debtWarningMessage) {
+                // Show warning first, then open bills modal on continue
+                eventPanel.classList.remove('hidden'); // Show event panel for this message
+                displayMessage("Debt Warning", debtWarningMessage, [{text: "Continue to Bills"}], () => { // Translated
+                    openObligatoryModal();
+                });
+            } else {
+                // No warning, go straight to bills modal
+                openObligatoryModal();
+            }
+        }
+        
+        // NEW: Open and populate the obligatory costs modal
+        function openObligatoryModal() {
+            eventPanel.classList.add('hidden'); // Hide main event panel
+            processedObligatoryCount = 0;
+            obligatoryTableBody.innerHTML = '';
+            obligatoryModalError.textContent = '';
+            
+            let currentObligatory = JSON.parse(JSON.stringify(allEvents.obligatory));
+            if (gameState.carSold) {
+                currentObligatory = currentObligatory.filter(event => !event.id.includes('car_') && !event.id.includes('fuel'));
+            }
+            totalObligatoryCosts = currentObligatory.length;
+            
+            if (totalObligatoryCosts === 0) {
+                btnObligatoryContinue.disabled = false;
+                obligatoryModal.classList.remove('hidden');
+                return;
+            }
+
+            btnObligatoryContinue.disabled = true;
+
+            currentObligatory.forEach(event => {
+                const row = document.createElement('tr');
+                row.className = 'obligatory-row';
+                row.dataset.eventId = event.id;
+                row.dataset.eventAmount = event.amount; // Store amount for easier access
+
+                row.innerHTML = `
+                    <td>${event.title}</td>
+                    <td class="cost-amount">${formatCurrency(event.amount)}</td>
+                    <td class="obligatory-actions">
+                        <button class="btn btn-primary btn-pay-obligatory" data-choice="pay">Pay</button>
+                        <button class="btn btn-secondary btn-defer-obligatory" data-choice="later">Defer</button>
+                        <button class="btn btn-accent btn-deny-obligatory" data-choice="deny"></button>
+                    </td>
+                `; // Translated
+                obligatoryTableBody.appendChild(row);
+            });
+            
+            // Add listeners
+            obligatoryTableBody.querySelectorAll('.obligatory-actions button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const row = e.target.closest('tr');
+                    const eventId = row.dataset.eventId;
+                    const choiceId = e.target.dataset.choice;
+                    handleObligatoryChoice(eventId, choiceId, row);
+                });
+            });
+
+            updateObligatoryButtonStates(); // Set initial disabled states
+            obligatoryModal.classList.remove('hidden');
         }
 
+        // NEW: Handle clicks from the obligatory modal
+        function handleObligatoryChoice(eventId, choiceId, rowElement) {
+            obligatoryModalError.textContent = ''; // Clear error
+            const event = allEvents.obligatory.find(e => e.id === eventId);
+            if (!event) return;
+
+            const choice = event.choices.find(c => c.id === choiceId);
+            if (!choice) return;
+
+            // Check for affordability *before* processing
+            if (choiceId === 'pay') {
+                if (gameState.money < event.amount) {
+                    obligatoryModalError.textContent = "You don't have enough money to pay this!"; // Translated
+                    return;
+                }
+                gameState.money -= event.amount;
+            }
+
+            // Apply stat effects
+            applyEffects(choice.effects);
+            
+            // Add to debt if needed
+            if (choice.action === 'defer' || choice.action === 'add_to_debt') {
+                addEventToDebt(event, event.amount, choice.action);
+            }
+
+            // Update main UI (money, debt, stats)
+            updateUI();
+            
+            // Update the row in the modal to show status
+            let statusText = '';
+            let statusClass = '';
+            switch(choiceId) {
+                case 'pay': statusText = 'Paid'; statusClass = 'status-paid'; break;
+                case 'later': statusText = 'Deferred'; statusClass = 'status-deferred'; break;
+                case 'deny': statusText = 'Denied'; statusClass = 'status-denied'; break;
+            } // Translated
+            rowElement.querySelector('.obligatory-actions').innerHTML = `<span class="obligatory-status ${statusClass}">${statusText}</span>`;
+            
+            // Mark as processed
+            rowElement.classList.add('processed');
+            processedObligatoryCount++;
+            
+            // Check if all items are processed
+            if (processedObligatoryCount === totalObligatoryCosts) {
+                btnObligatoryContinue.disabled = false;
+            }
+            
+            // Re-check all other pay buttons
+            updateObligatoryButtonStates();
+        }
+        
+        // NEW: Check affordability of all "Pay" buttons in the table
+        function updateObligatoryButtonStates() {
+             obligatoryTableBody.querySelectorAll('tr:not(.processed)').forEach(row => {
+                const amount = parseInt(row.dataset.eventAmount, 10);
+                const payButton = row.querySelector('.btn-pay-obligatory');
+                if (payButton) {
+                    payButton.disabled = gameState.money < amount;
+                }
+             });
+        }
+
+        // NEW: Listener for the continue button
+        btnObligatoryContinue.addEventListener('click', () => {
+            obligatoryModal.classList.add('hidden');
+            
+            // Now build the queue for the rest of the month
+            buildMonthlyQueue();
+            
+            // And start processing them
+            processNextEvent();
+        });
+
+
+        // MODIFIED: Build queue *without* obligatory costs
         function buildMonthlyQueue() {
             gameState.monthlyEventQueue = [];
             
-            let obligatory = JSON.parse(JSON.stringify(allEvents.obligatory));
-            if (gameState.carSold) {
-                obligatory = obligatory.filter(event => !event.id.includes('car_') && !event.id.includes('fuel'));
-            }
-            gameState.monthlyEventQueue.push(...obligatory);
-
+            // OBLIGATORY COSTS ARE NO LONGER ADDED HERE
+            
             gameState.monthlyEventQueue.push(...JSON.parse(JSON.stringify(allEvents.special)));
             
             gameState.monthlyEventQueue.push(...gameState.snoozedEvents.map(item => item.event));
             gameState.snoozedEvents = []; 
 
-            if (gameState.currentMonth === 0) {
-                gameState.monthlyEventQueue.push(allEvents.optional.find(e => e.id === 'opt_pizza'));
-                gameState.monthlyEventQueue.push(allEvents.optional.find(e => e.id === 'opt_book'));
-            } else {
-                let optionalPool = [...allEvents.optional];
-                for (let i = 0; i < 4; i++) {
-                    if (optionalPool.length === 0) break;
-                    let randIndex = Math.floor(Math.random() * optionalPool.length);
-                    gameState.monthlyEventQueue.push(optionalPool.splice(randIndex, 1)[0]);
-                }
+            // Pick 4 random optional events
+            let optionalPool = [...allEvents.optional];
+            let eventsToPick = (gameState.currentMonth === 0) ? 2 : 4; // Fewer in first month
+            
+            for (let i = 0; i < eventsToPick; i++) {
+                if (optionalPool.length === 0) break;
+                let randIndex = Math.floor(Math.random() * optionalPool.length);
+                gameState.monthlyEventQueue.push(optionalPool.splice(randIndex, 1)[0]);
             }
 
-            // Add 2-3 random opportunities
+            // Add 5 random opportunities (Increased from 4)
             let opportunityPool = [...allEvents.opportunity];
             if (gameState.carSold) {
                 opportunityPool = opportunityPool.filter(event => event.id !== 'job_sell_car');
             }
-            for (let i = 0; i < 3; i++) {
+            // --- CHANGE: Increased loop count from 4 to 5 ---
+            for (let i = 0; i < 5; i++) { 
                  if (opportunityPool.length === 0) break;
                  let oppRandIndex = Math.floor(Math.random() * opportunityPool.length);
                  gameState.monthlyEventQueue.push(opportunityPool.splice(oppRandIndex, 1)[0]);
@@ -1201,6 +1504,10 @@
 
             const event = gameState.monthlyEventQueue.shift();
             if (event) {
+                // Set date and display the event
+                let monthName = gameState.monthNames[gameState.currentMonth];
+                gameDate.textContent = `Year ${gameState.currentYear}, ${monthName} ${event.dayOfMonth}`; // Translated
+                eventPanel.classList.remove('hidden'); // Make sure it's visible
                 displayEvent(event);
             } else {
                 processNextEvent();
@@ -1208,40 +1515,32 @@
         }
 
         /**
-         * === CONTAINS THE NEW TITLE/COST LOGIC ===
+         * Displays a single event (NOT obligatory ones)
          */
         function displayEvent(event) {
-            let monthName = gameState.monthNames[gameState.currentMonth];
-            gameDate.textContent = `Year ${gameState.currentYear}, ${monthName} ${event.dayOfMonth}`;
-            
-            // --- NEW LOGIC TO ADD COST TO TITLE ---
             let titleText = event.title;
             if (event.amount && event.amount > 0) {
-                // For obligatory, optional, shock
                 titleText += ` (${formatCurrency(event.amount)})`;
             } else if (event.type === 'opportunity' && event.choices[0].effects.money > 0) {
-                // For single-choice "get money" events (like Tax Refund)
                 if (event.choices.length === 1) {
                      titleText += ` (+${formatCurrency(event.choices[0].effects.money)})`;
                 }
-                // For multi-choice opportunities, the buttons already show the amounts
             }
             eventTitle.textContent = titleText;
-            // --- END NEW LOGIC ---
 
-            eventMessage.innerHTML = event.message.replace(/\n/g, '<br>'); // Use .innerHTML to render <br>
+            eventMessage.innerHTML = event.message.replace(/\n/g, '<br>'); // Use .innerHTML
             eventChoices.innerHTML = "";
             
             if (event.type === 'optional') {
                 const btnYes = document.createElement('button');
                 btnYes.className = 'btn btn-primary';
-                btnYes.textContent = `Yes (${formatCurrency(event.amount)})`;
+                btnYes.textContent = `Yes (${formatCurrency(event.amount)})`; // Translated
                 btnYes.onclick = () => handleOptionalChoice(event, true);
                 eventChoices.appendChild(btnYes);
 
                 const btnNo = document.createElement('button');
                 btnNo.className = 'btn btn-accent';
-                btnNo.textContent = `No`;
+                btnNo.textContent = `No`; // Translated
                 btnNo.onclick = () => handleOptionalChoice(event, false);
                 eventChoices.appendChild(btnNo);
 
@@ -1259,10 +1558,11 @@
                     event.choices.forEach(choice => {
                         const btn = document.createElement('button');
                         btn.className = 'btn btn-primary';
+                        // Style mapping remains the same
                         if (choice.id.includes('later')) btn.className = 'btn btn-secondary';
                         if (choice.id.includes('deny') || choice.id.includes('no')) btn.className = 'btn btn-accent';
 
-                        btn.textContent = choice.text;
+                        btn.textContent = choice.text; // Already translated in database
                         btn.onclick = () => handleChoice(choice, event);
                         eventChoices.appendChild(btn);
                     });
@@ -1280,7 +1580,8 @@
                         gameState.recurringCosts.push({ id: event.id, title: event.title, amount: event.amount });
                     }
                 } else {
-                    displayMessage("Not Enough Money", "You don't have enough money for this.", [{text: "Continue"}], () => processNextEvent());
+                    // Translated
+                    displayMessage("Not Enough Money", "You don't have enough money for this.", [{text: "Got it"}], () => processNextEvent());
                     return;
                 }
             } else {
@@ -1306,6 +1607,7 @@
 
             applyEffects(choice.effects);
             
+            // This logic is now only for SHOCKS, not obligatory
             if (choice.action === 'defer' || choice.action === 'add_to_debt') {
                 addEventToDebt(event, event.amount, choice.action);
             }
@@ -1317,7 +1619,7 @@
             }
             if (choice.action === 'sell_car') {
                 gameState.carSold = true;
-                gameState.recurringCosts = gameState.recurringCosts.filter(cost => !cost.id.includes('car_'));
+                // No need to filter recurring costs here, already done
             }
 
             updateUI();
@@ -1336,11 +1638,13 @@
             
             let lastMonthName = gameState.monthNames[gameState.currentMonth === 0 ? 11 : gameState.currentMonth - 1];
             
+            // Translated
+            eventPanel.classList.remove('hidden'); // Ensure panel is visible
             displayMessage("End of Month", `You've reached the end of ${lastMonthName}. Get ready for next month...`, [{text: "Start Next Month"}], () => startMonth());
         }
 
         // ==================================================================
-        // 5. UI & STATE UPDATE FUNCTIONS (Updated for new UI)
+        // 5. UI & STATE UPDATE FUNCTIONS (Translated)
         // ==================================================================
 
         function applyEffects(effects) {
@@ -1352,47 +1656,31 @@
             }
         }
 
+        // NEW: Function to update segmented bars
+        function updateSegmentedBar(container, value, max, className) {
+            const segments = container.querySelectorAll('.bar-segment');
+            const numSegments = segments.length;
+            let percent = clamp((value / max) * 100, 0, 100);
+            let segmentsToFill = Math.ceil((percent / 100) * numSegments);
+
+            segments.forEach((segment, index) => {
+                if (index < segmentsToFill) {
+                    segment.classList.add(className);
+                } else {
+                    segment.classList.remove(className);
+                }
+            });
+        }
+
         function updateUI() {
-            // Update Text Labels
             moneyLabel.textContent = formatCurrency(gameState.money);
+            updateSegmentedBar(moneyBarContainer, gameState.money, gameState.maxMoney, 'filled-money');
             
             let totalDebt = gameState.debtHistory.reduce((sum, item) => sum + item.amount, 0);
             gameState.debt = totalDebt;
             debtLabel.textContent = formatCurrency(totalDebt);
-            
-            // Calculate Percentages
-            let moneyPercent = clamp((gameState.money / gameState.maxMoney) * 100, 0, 100);
-            let debtPercent = clamp((totalDebt / gameState.maxDebt) * 100, 0, 100);
+            updateSegmentedBar(debtBarContainer, totalDebt, gameState.maxDebt, 'filled-debt');
 
-            // --- NEW: Populate Segmented Bars ---
-            const TOTAL_SEGMENTS = 20;
-            
-            // Update Money Bar
-            const moneySegments = Math.round((moneyPercent / 100) * TOTAL_SEGMENTS);
-            moneyBarContainer.innerHTML = ''; // Clear old segments
-            for (let i = 0; i < TOTAL_SEGMENTS; i++) {
-                const segment = document.createElement('div');
-                segment.className = 'bar-segment';
-                if (i < moneySegments) {
-                    segment.classList.add('filled-money');
-                }
-                moneyBarContainer.appendChild(segment);
-            }
-
-            // Update Debt Bar
-            const debtSegments = Math.round((debtPercent / 100) * TOTAL_SEGMENTS);
-            debtBarContainer.innerHTML = ''; // Clear old segments
-            for (let i = 0; i < TOTAL_SEGMENTS; i++) {
-                const segment = document.createElement('div');
-                segment.className = 'bar-segment';
-                if (i < debtSegments) {
-                    segment.classList.add('filled-debt');
-                }
-                debtBarContainer.appendChild(segment);
-            }
-            // --- END NEW LOGIC ---
-
-            // Update Gauges
             socialPercent.textContent = `${gameState.social}%`;
             socialGauge.style.setProperty('--p-social', gameState.social);
             
@@ -1402,10 +1690,12 @@
 
         function checkLossConditions() {
             if (gameState.social <= 0) {
+                // Translated
                 gameOver("Your social relationships have collapsed. You lost the game.");
                 return true;
             }
             if (gameState.well_being <= 0) {
+                // Translated
                 gameOver("Your personal well-being has reached zero. Your health and family life collapsed. You lost the game.");
                 return true;
             }
@@ -1413,26 +1703,27 @@
         }
 
         function gameOver(message) {
-            displayMessage("Game Over", message, [], () => {}); 
+            eventPanel.classList.remove('hidden'); // Ensure panel is visible
+            displayMessage("Game Over", message, [], () => {}); // Translated
             eventChoices.innerHTML = ""; 
         }
 
         function displayMessage(title, message, choices, callback) {
             eventTitle.textContent = title;
-            eventMessage.innerHTML = message.replace(/\n/g, '<br>'); // Use .innerHTML to render <br>
+            eventMessage.innerHTML = message.replace(/\n/g, '<br>'); // Use .innerHTML
             eventChoices.innerHTML = "";
             
             if (choices.length === 0) return; 
 
             const btn = document.createElement('button');
             btn.className = 'btn btn-primary';
-            btn.textContent = choices[0].text;
+            btn.textContent = choices[0].text; // Already translated
             btn.onclick = callback;
             eventChoices.appendChild(btn);
         }
 
         // ==================================================================
-        // 6. MODAL & DEBT FUNCTIONS (Unchanged)
+        // 6. MODAL & DEBT FUNCTIONS (Translated + Alert fix)
         // ==================================================================
 
         function addEventToDebt(event, amount, action) {
@@ -1467,8 +1758,10 @@
 
         function populateDebtModal() {
             debtModalBody.innerHTML = "";
+            debtModalError.textContent = ""; // Clear error
             if (gameState.debtHistory.length === 0) {
-                debtModalBody.innerHTML = "<p>You have no obligatory debts. Good job!</p>";
+                // Translated
+                debtModalBody.innerHTML = "<p>You have no outstanding debts. Good job!</p>";
                 return;
             }
             
@@ -1483,7 +1776,7 @@
                     <div class="log-item-actions">
                         <button class="btn btn-primary btn-pay-debt" data-index="${index}">Pay Now</button>
                     </div>
-                `;
+                `; // Translated
                 debtModalBody.appendChild(el);
             });
 
@@ -1501,24 +1794,26 @@
                 gameState.money -= item.amount;
                 gameState.debtHistory.splice(index, 1); 
                 updateUI();
-                populateDebtModal();
+                populateDebtModal(); // Repopulate to clear error and update list
             } else {
-                // Replaced alert with a modal-like message
-                displayMessage("Not Enough Money", "You don't have enough money to pay this debt!", [{text: "Continue"}], () => processNextEvent());
+                // Translated + Alert fix
+                debtModalError.textContent = "You don't have enough money to pay this debt!";
             }
         }
         
         function populateLogModal() {
             logModalBody.innerHTML = "";
+            logModalError.textContent = ""; // Clear error
             let allSnoozed = [...gameState.snoozedEvents]; 
             
             gameState.recurringCosts.forEach(cost => {
                 allSnoozed.push({
                     event: { id: cost.id, title: `Cancel: ${cost.title}`, amount: 0, recurring: true, effects_no: { social: 0, well_being: 0 } }
-                });
+                }); // Translated "Cancel"
             });
 
             if (allSnoozed.length === 0) {
+                // Translated
                 logModalBody.innerHTML = "<p>You have no deferred optional events.</p>";
                 return;
             }
@@ -1526,6 +1821,7 @@
             allSnoozed.forEach((item, index) => {
                 const el = document.createElement('div');
                 el.className = 'log-item';
+                // Translated "Cancel" and "Accept"
                 let text = item.event.recurring ? `Cancel` : `Accept (${formatCurrency(item.event.amount)})`;
                 el.innerHTML = `
                     <div class="log-item-info">
@@ -1553,7 +1849,7 @@
                 ...gameState.snoozedEvents, 
                 ...gameState.recurringCosts.map(cost => ({
                     event: { id: cost.id, title: `Cancel: ${cost.title}`, amount: 0, recurring: true, effects_no: { social: 0, well_being: 0 } }
-                }))
+                })) // Translated
             ];
 
             const item = allSnoozed[index];
@@ -1570,11 +1866,8 @@
                     }
                     gameState.snoozedEvents = gameState.snoozedEvents.filter(e => e.event.id !== item.event.id);
                 } else {
-                     // Replaced alert with a modal-like message
-                    displayMessage("Not Enough Money", "You don't have enough money for this!", [{text: "Continue"}], () => {
-                        // We are in a modal, so just re-populate it
-                        populateLogModal();
-                    });
+                    // Translated + Alert fix
+                    logModalError.textContent = "You don't have enough money for this!";
                 }
             }
             updateUI();
@@ -1582,10 +1875,11 @@
         }
 
         // ==================================================================
-        // 7. HELPER FUNCTIONS (Unchanged)
+        // 7. HELPER FUNCTIONS
         // ==================================================================
         
         function formatCurrency(value) {
+            // Kept hu-HU and HUF formatting as game balance is based on Forint
             return new Intl.NumberFormat('hu-HU', { style: 'currency', currency: 'HUF', maximumFractionDigits: 0 }).format(value);
         }
 
@@ -1594,7 +1888,7 @@
         }
 
         // ==================================================================
-        // 8. INITIALIZATION (Unchanged)
+        // 8. INITIALIZATION
         // ==================================================================
         
         startGameBtn.onclick = init;
@@ -1626,6 +1920,3 @@
 
 </body>
 </html>
-
-
-
